@@ -28,4 +28,14 @@ interface FoodLogDao {
     // Get meal type totals for a date
     @Query("SELECT mealType, SUM(totalCalories) as calories, SUM(totalProtein) as protein, SUM(totalCarbs) as carbs, SUM(totalFat) as fat FROM food_logs WHERE date = :date GROUP BY mealType")
     fun getMealTypeTotalsForDate(date: String): Flow<List<MealTypeSummary>>
+    
+    // Get macro totals for a date
+    @Query("SELECT SUM(totalProtein) FROM food_logs WHERE date = :date")
+    fun getTotalProteinForDate(date: String): Flow<Float?>
+    
+    @Query("SELECT SUM(totalCarbs) FROM food_logs WHERE date = :date")
+    fun getTotalCarbsForDate(date: String): Flow<Float?>
+    
+    @Query("SELECT SUM(totalFat) FROM food_logs WHERE date = :date")
+    fun getTotalFatForDate(date: String): Flow<Float?>
 }

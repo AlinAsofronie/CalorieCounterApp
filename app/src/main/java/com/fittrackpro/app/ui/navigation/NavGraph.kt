@@ -10,6 +10,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.fittrackpro.app.ui.screens.onboarding.OnboardingScreen
+import com.fittrackpro.app.ui.screens.home.HomeScreen
+import com.fittrackpro.app.ui.screens.food.FoodLogScreen
+import com.fittrackpro.app.ui.screens.food.TodaysFoodLogScreen
 
 @Composable
 fun NavGraph(
@@ -31,13 +34,40 @@ fun NavGraph(
         }
         
         composable(Screen.Home.route) {
-            // Placeholder for home screen
+            HomeScreen(
+                onNavigateToFoodLog = {
+                    navController.navigate(Screen.FoodLog.route)
+                },
+                onNavigateToTodaysFoodLog = {
+                    navController.navigate(Screen.TodaysFoodLog.route)
+                },
+                onNavigateToProfile = {
+                    navController.navigate(Screen.Profile.route)
+                }
+            )
+        }
+        
+        composable(Screen.Profile.route) {
+            // Placeholder for profile screen
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Home Screen - Coming Soon!")
+                Text("Profile Screen - Coming Soon!")
             }
+        }
+        
+        composable(Screen.FoodLog.route) {
+            FoodLogScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable(Screen.TodaysFoodLog.route) {
+            TodaysFoodLogScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToAddFood = { navController.navigate(Screen.FoodLog.route) }
+            )
         }
         
         // We'll add more screens as we build them

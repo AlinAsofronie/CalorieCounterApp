@@ -74,6 +74,21 @@ class FoodRepository(
         return foodLogDao.getTotalCaloriesForDate(today)
     }
     
+    fun getTotalProteinForToday(): Flow<Float?> {
+        val today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+        return foodLogDao.getTotalProteinForDate(today)
+    }
+    
+    fun getTotalCarbsForToday(): Flow<Float?> {
+        val today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+        return foodLogDao.getTotalCarbsForDate(today)
+    }
+    
+    fun getTotalFatForToday(): Flow<Float?> {
+        val today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+        return foodLogDao.getTotalFatForDate(today)
+    }
+    
     // Helper to get today's date
     fun getTodayDate(): String = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
 }

@@ -6,19 +6,18 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.fittrackpro.app.data.local.database.DatabaseTest
+import androidx.navigation.compose.rememberNavController
+import com.fittrackpro.app.ui.navigation.NavGraph
+import com.fittrackpro.app.ui.navigation.Screen
 import com.fittrackpro.app.ui.theme.FitTrackProTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Temporary database test
-        DatabaseTest().testDatabase(this)
+        val userRepository = (application as FitTrackApp).userRepository
         
         setContent {
             FitTrackProTheme {
@@ -26,25 +25,28 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("FitTrack Pro")
+                    var startDestination by remember { mutableStateOf<String?>(null) }
+                    
+                    // Check if user has completed onboarding
+                    LaunchedEffect(Unit) {
+                        val hasProfile = userRepository.hasUserProfile()
+                        startDestination = if (hasProfile) {
+                            Screen.Home.route
+                        } else {
+                            Screen.Onboarding.route
+                        }
+                    }
+                    
+                    // Show navigation once we know where to start
+                    startDestination?.let { destination ->
+                        val navController = rememberNavController()
+                        NavGraph(
+                            navController = navController,
+                            startDestination = destination
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FitTrackProTheme {
-        Greeting("FitTrack Pro")
     }
 }
